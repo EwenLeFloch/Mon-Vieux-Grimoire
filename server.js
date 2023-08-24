@@ -1,6 +1,11 @@
 const http = require("http");
 const app = require("./app");
+require("dotenv").config({ path: "./config/.env" });
 
+//database connection
+require("./config/database").connectToDB();
+
+// Fonction pour normaliser le port
 const normalizePort = (val) => {
 	const port = parseInt(val, 10);
 
@@ -12,9 +17,8 @@ const normalizePort = (val) => {
 	}
 	return false;
 };
-const port = normalizePort(process.env.PORT || "4000");
-app.set("port", port);
 
+//Gestionnaire d'erreurs
 const errorHandler = (error) => {
 	if (error.syscall !== "listen") {
 		throw error;
@@ -36,8 +40,13 @@ const errorHandler = (error) => {
 	}
 };
 
+//Configuration du port
+const port = normalizePort(process.env.PORT);
+app.set("port", port);
+
 const server = http.createServer(app);
 
+// GEstion des erreurs et démaraage du serveur
 server.on("error", errorHandler);
 server.on("listening", () => {
 	const address = server.address();
