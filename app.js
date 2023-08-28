@@ -2,7 +2,6 @@ const express = require("express");
 const morgan = require("morgan");
 
 const app = express();
-const Book = require("./models/books.model");
 
 // Utilisation de morgan pour le logging des requêtes
 app.use(morgan("combined"));
@@ -23,6 +22,10 @@ app.use((req, res, next) => {
 	);
 	next();
 });
+
+// Routes
+const booksRoutes = require("./routes/books.route");
+app.use("/api/books", booksRoutes);
 
 // Gestion des erreurs
 app.use((error, req, res, next) => {
