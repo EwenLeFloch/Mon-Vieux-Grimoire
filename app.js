@@ -24,7 +24,7 @@ app.use((req, res, next) => {
 });
 
 // Routes
-const booksRoutes = require("./routes/books.route");
+const booksRoutes = require("./routes/booksRoute");
 app.use("/api/books", booksRoutes);
 
 // Gestion des erreurs

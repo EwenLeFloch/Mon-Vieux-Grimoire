@@ -1,7 +1,7 @@
 const express = require("express");
 
 const router = express.Router();
-const booksControllers = require("../controllers/books.model");
+const booksControllers = require("../controllers/booksController");
 
 router.get("/", booksControllers.getAllBooks);
 router.post("/", booksControllers.createBook);
