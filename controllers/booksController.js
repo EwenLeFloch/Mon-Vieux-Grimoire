@@ -94,8 +94,40 @@ exports.bestRatings = (req, res, next) => {
 };
 
 //To rate a book
-exports.ratingBook = (req, res, next) => {
+exports.ratingBook = async (req, res) => {
 	const bookId = req.params.id;
 	const userId = req.body.userId;
-	const rate = req.body.rating;
+	const rating = req.body.rating;
+
+	try {
+		//Verify if the user has already rated
+		const book = await Book.findById(bookId);
+		if (book.ratings.some((rating) => rating.userId === userId)) {
+			return res
+				.status(400)
+				.json({ error: "L'utilisateur a déjà noté ce livre." });
+		}
+
+		//Add the new rate
+		const updatedBook = await Book.findByIdAndUpdate(
+			bookId,
+			{
+				$push: { ratings: { userId: userId, grade: rating } },
+			},
+			{ new: true }
+		);
+
+		//Update the new average rate
+		const totalRatings = updatedBook.ratings.length;
+		const totalRatingSum = updatedBook.ratings.reduce(
+			(sum, rating) => sum + rating.grade,
+			0
+		);
+		updatedBook.averageRating = totalRatingSum / totalRatings;
+
+		await updatedBook.save();
+		return res.json(updatedBook);
+	} catch (error) {
+		return res.status(500).json({ error });
+	}
 };
