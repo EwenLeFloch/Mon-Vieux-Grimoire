@@ -1,5 +1,6 @@
 const express = require("express");
 const morgan = require("morgan");
+const path = require("path");
 
 const app = express();
 
@@ -26,6 +27,9 @@ app.use((req, res, next) => {
 // Routes
 const booksRoutes = require("./routes/booksRoute");
 app.use("/api/books", booksRoutes);
+const usersRoutes = require("./routes/usersRoute");
+app.use("/api/auth", usersRoutes);
+app.use("/images", express.static(path.join(__dirname, "images")));
 
 // Gestion des erreurs
 app.use((error, req, res, next) => {
