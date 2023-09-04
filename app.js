@@ -1,11 +1,7 @@
 const express = require("express");
-const morgan = require("morgan");
 const path = require("path");
 
 const app = express();
-
-// Utilisation de morgan pour le logging des requêtes
-app.use(morgan("combined"));
 
 //Middleware pour gérer les requêtes JSON
 app.use(express.json());

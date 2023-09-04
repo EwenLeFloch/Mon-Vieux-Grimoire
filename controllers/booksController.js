@@ -84,3 +84,18 @@ exports.deleteBook = (req, res, next) => {
 		})
 		.catch((error) => res.status(500).json({ error }));
 };
+
+//To find the top 3
+exports.bestRatings = (req, res, next) => {
+	Book.find()
+		.sort({ averageRating: "desc" })
+		.then((books) => res.status(200).json(books.splice(0, 3)))
+		.catch((error) => res.status(400).json({ error }));
+};
+
+//To rate a book
+exports.ratingBook = (req, res, next) => {
+	const bookId = req.params.id;
+	const userId = req.body.userId;
+	const rate = req.body.rating;
+};
