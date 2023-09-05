@@ -50,6 +50,22 @@ exports.modifyBook = (req, res, next) => {
 			if (book.userId != req.auth.userId) {
 				res.status(401).json({ message: "Not authorized" });
 			} else {
+				//To delete the old image
+				if (req.file) {
+					const oldFilename = book.imageUrl.split("/images/")[1];
+					console.log("Ancien nom de fichier :", oldFilename);
+					fs.unlink(`images/${oldFilename}`, (err) => {
+						if (err) {
+							console.error(
+								"Erreur lors de la suppression de l'ancienne image :",
+								err
+							);
+						} else {
+							console.log("Ancienne image supprimée avec succès");
+						}
+					});
+				}
+
 				Book.updateOne(
 					{ _id: req.params.id },
 					{ ...bookObject, _id: req.params.id }
@@ -70,7 +86,7 @@ exports.deleteBook = (req, res, next) => {
 			if (book.userId != req.auth.userId) {
 				res.status(401).json({ message: "Not authorized" });
 			} else {
-				const filename = book.imageURL.split("/images/")[1];
+				const filename = book.imageUrl.split("/images/")[1];
 				fs.unlink(`images/${filename}`, () => {
 					Book.deleteOne({ _id: req.params.id })
 						.then((books) =>
@@ -123,7 +139,7 @@ exports.ratingBook = async (req, res) => {
 			(sum, rating) => sum + rating.grade,
 			0
 		);
-		updatedBook.averageRating = totalRatingSum / totalRatings;
+		updatedBook.averageRating = (totalRatingSum / totalRatings).toFixed(0);
 
 		await updatedBook.save();
 		return res.json(updatedBook);

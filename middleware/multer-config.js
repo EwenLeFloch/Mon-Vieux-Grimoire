@@ -1,4 +1,5 @@
 const multer = require("multer");
+const path = require("path");
 
 // To verify the file extension
 
@@ -10,14 +11,14 @@ const storage = multer.diskStorage({
 	},
 	filename: (req, file, callback) => {
 		const name = file.originalname.split(" ").join("_");
-		callback(null, name);
+		callback(null, Date.now() + name);
 	},
 });
 
 const filter = (req, file, callback) => {
 	const ext = path.extname(file.originalname).toLowerCase();
 
-	if (ext !== whitelist) {
+	if (!whitelist.includes(ext)) {
 		return callback(new Error("Ce type de fichier n'est pas authorisé"));
 	}
 
