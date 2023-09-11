@@ -1,10 +1,14 @@
 const express = require("express");
 const path = require("path");
+const helmet = require("helmet");
 
 const app = express();
 
 //Middleware pour gérer les requêtes JSON
 app.use(express.json());
+
+//Middleware pour la sécurité
+app.use(helmet());
 
 //Middleware pour gérer les en-têtes CORS
 app.use((req, res, next) => {
@@ -13,16 +17,15 @@ app.use((req, res, next) => {
 		"Access-Control-Allow-Headers",
 		"Origin, X-Requested-With, Content, Accept, Content-Type, Authorization"
 	);
-	res.setHeader(
-		"Access-Control-Allow-Methods",
-		"GET, POST, PUT, DELETE, PATCH, OPTIONS"
-	);
+	res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
 	next();
 });
 
-// Routes
+// Middleware pour gérer le nombre de requêtes autorisées
 const rateLimit = require("./middleware/limiter");
 app.use("/api/", rateLimit);
+
+// Routes
 const booksRoutes = require("./routes/booksRoute");
 app.use("/api/books", booksRoutes);
 const usersRoutes = require("./routes/usersRoute");
