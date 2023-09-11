@@ -10,7 +10,7 @@ app.use(express.json());
 
 //Middleware pour la sécurité
 app.use(sanitize()); // Pour éviter les injections noSQL
-app.use(helmet()); // Renforce la sécurité via diverses en-têtes HTTP
+app.use(helmet({ crossOriginResourcePolicy: false })); // Renforce la sécurité via diverses en-têtes HTTP
 
 //Middleware pour gérer les en-têtes CORS
 app.use((req, res, next) => {
@@ -19,13 +19,12 @@ app.use((req, res, next) => {
 		"Access-Control-Allow-Headers",
 		"Origin, X-Requested-With, Content, Accept, Content-Type, Authorization"
 	);
-	res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+	res.setHeader(
+		"Access-Control-Allow-Methods",
+		"GET, POST, PUT, DELETE, PATCH, OPTIONS"
+	);
 	next();
 });
-
-// Middleware pour gérer le nombre de requêtes autorisées
-const rateLimit = require("./middleware/limiter");
-app.use("/api/", rateLimit);
 
 // Routes
 const booksRoutes = require("./routes/booksRoute");

@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
-
+const limiter = require("../middleware/limiter");
 const usersCtrl = require("../controllers/usersController");
 
 router.post("/signup", usersCtrl.signup);
-router.post("/login", usersCtrl.login);
+router.post("/login", limiter, usersCtrl.login);
 
 module.exports = router;
