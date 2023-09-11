@@ -3,12 +3,26 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 //To create an account
+
+//To verify if the mail is valid
+const isValidEmail = (email) => {
+	const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+	return emailRegex.test(email);
+};
 exports.signup = (req, res, next) => {
+	const email = req.body.email;
+
+	if (!isValidEmail(email)) {
+		return res
+			.status(400)
+			.json({ error: "L'adresse e-mail n'est pas valide." });
+	}
+
 	bcrypt
 		.hash(req.body.password, 10)
 		.then((hash) => {
 			const user = new User({
-				email: req.body.email,
+				email: email,
 				password: hash,
 			});
 			user.save()
