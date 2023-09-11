@@ -1,6 +1,7 @@
 const express = require("express");
 const path = require("path");
 const helmet = require("helmet");
+const sanitize = require("express-mongo-sanitize");
 
 const app = express();
 
@@ -8,7 +9,8 @@ const app = express();
 app.use(express.json());
 
 //Middleware pour la sécurité
-app.use(helmet());
+app.use(sanitize()); // Pour éviter les injections noSQL
+app.use(helmet()); // Renforce la sécurité via diverses en-têtes HTTP
 
 //Middleware pour gérer les en-têtes CORS
 app.use((req, res, next) => {
