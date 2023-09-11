@@ -115,6 +115,12 @@ exports.ratingBook = async (req, res) => {
 	const userId = req.body.userId;
 	const rating = req.body.rating;
 
+	if (rating < 1 || rating > 5) {
+		return res
+			.status(400)
+			.json({ error: "La note doit être comprise entre 1 et 5." });
+	}
+
 	try {
 		//Verify if the user has already rated
 		const book = await Book.findById(bookId);
