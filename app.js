@@ -21,6 +21,8 @@ app.use((req, res, next) => {
 });
 
 // Routes
+const rateLimit = require("./middleware/limiter");
+app.use("/api/", rateLimit);
 const booksRoutes = require("./routes/booksRoute");
 app.use("/api/books", booksRoutes);
 const usersRoutes = require("./routes/usersRoute");

@@ -112,7 +112,7 @@ exports.bestRatings = (req, res, next) => {
 //To rate a book
 exports.ratingBook = async (req, res) => {
 	const bookId = req.params.id;
-	const userId = req.body.userId;
+	const userId = req.auth.userId;
 	const rating = req.body.rating;
 
 	if (rating < 1 || rating > 5) {
