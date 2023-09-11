@@ -9,13 +9,37 @@ const isValidEmail = (email) => {
 	const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
 	return emailRegex.test(email);
 };
+
+//To verify if the password is strong enough
+const isStrongPassword = (password) => {
+	const minLength = 8;
+	const hasUpperCase = /[A-Z]/.test(password);
+	const hasLowerCase = /[a-z]/.test(password);
+	const hasNumbers = /\d/.test(password);
+	const hasSpecialChars = /[!@#$%^&*()_+{}\[\]:;<>,.?~\\-]/.test(password);
+
+	return (
+		password.length >= minLength &&
+		hasUpperCase &&
+		hasLowerCase &&
+		hasNumbers &&
+		hasSpecialChars
+	);
+};
 exports.signup = (req, res, next) => {
 	const email = req.body.email;
+	const password = req.body.password;
 
 	if (!isValidEmail(email)) {
 		return res
 			.status(400)
 			.json({ error: "L'adresse e-mail n'est pas valide." });
+	}
+
+	if (!isStrongPassword(password)) {
+		return res
+			.status(400)
+			.json({ error: "Le mot de passe est trop faible" });
 	}
 
 	bcrypt
